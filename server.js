@@ -10,10 +10,17 @@ const Todo = require("./models/user")
 
 require("dotenv").config();
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const port = process.env.PORT || 3000
+// const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 const router = express.Router()
 
@@ -31,10 +38,12 @@ router.route("/todos")
 
     todo.title = req.body.title
     todo.desc = req.body.desc
+    todo.isDone = false
+
 
     todo.save(function (err) {
       if (err) {
-        res.send(err)
+        return res.send(err)
       }
       res.json({
         message: "Userを作成しました！"
@@ -62,6 +71,7 @@ router.route("/todos/:todo_id")
     User.findById(req.params.todo_id, function (err, todo) {
       todo.title = req.body.title
       todo.desc = req.body.desc
+      todo.isDone = req.body.isDone
 
       todo.save(function (err) {
         res.json({
@@ -89,3 +99,5 @@ app.use("/api", router)
 app.listen(port, () => {
   console.log("listenning!")
 })
+
+// proxyは3000サーバーと3001サーバーをつなげるもの
