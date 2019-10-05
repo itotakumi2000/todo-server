@@ -13,6 +13,7 @@ require("dotenv").config();
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "PUT, DELETE, GET");
   next();
 });
 
@@ -68,7 +69,7 @@ router.route("/todos/:todo_id")
     })
   })
   .put(function (req, res) {
-    User.findById(req.params.todo_id, function (err, todo) {
+    Todo.findById(req.params.todo_id, function (err, todo) {
       todo.title = req.body.title
       todo.desc = req.body.desc
       todo.isDone = req.body.isDone
